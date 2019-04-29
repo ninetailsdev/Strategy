@@ -91,7 +91,7 @@ public class GridBase : MonoBehaviour
         {
             start = false;
 
-            Pathfinder path = new Pathfinder();
+            //Pathfinder path = new Pathfinder();
 
             // testing purposes
            // grid[1, 0, 1].isWalkable = false;
@@ -100,18 +100,27 @@ public class GridBase : MonoBehaviour
             Node startNode = GetNodeFromVector3(startNodePosition);
             Node end = GetNodeFromVector3(endNodePosition);
 
-            path.startPosition = startNode;
-            path.endPosition = end;
+            //path.startPosition = startNode;
+            //path.endPosition = end;
 
             // find the path
-            List<Node> p = path.FindPath();
+          //  List<Node> p = path.FindPath();
 
             // disbale the world object for each node we agoing to pass from
             startNode.worldObject.SetActive(false);
-            foreach(Node n in p)
+          
+            for(int i =0; i< agents; i++)
             {
-                n.worldObject.SetActive(false);
+                PathfinderMaster.GetInstance().RequestPathfind(startNode, end, ShowPath);
             }
+        }
+    }
+
+    public void ShowPath(List<Node> path)
+    {
+        foreach(Node n in path)
+        {
+            n.worldObject.SetActive(false);
         }
     }
 

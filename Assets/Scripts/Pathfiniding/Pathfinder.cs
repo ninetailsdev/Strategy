@@ -8,11 +8,30 @@ public class Pathfinder
     public Node startPosition;
     public Node endPosition;
 
-    public List<Node> FindPath()
-    {
-        gridBase = GridBase.GetInstance();
+    public volatile bool jobDone = false;
+    PathfinderMaster.PathfindingJobComplete completeCallback;
+    List<Node> foundPath;
 
-        return FindPathActual(startPosition, endPosition);
+    public Pathfinder(Node start, Node target, PathfinderMaster.PathfindingJobComplete callBack)
+    {
+        startPosition = start;
+        endPosition = target;
+        completeCallback = callBack;
+        gridBase = GridBase.GetInstance();
+    }
+
+    public void FindPath()
+    {
+        foundPath = FindPathActual(startPosition, endPosition);
+        jobDone = true;
+    }
+
+    public void NotifyComplete()
+    {
+        if(completeCallback != null)
+        {
+            completeCallback(foundPath);
+        }
     }
 
     private List<Node> FindPathActual(Node start, Node target)
